@@ -10,10 +10,13 @@ import PopulationTable from './components/PopulationTable';
 import Visualizer from './components/Visualizer';
 import ConfigPanel from './components/ConfigPanel';
 import StepLogView from './components/StepLogView';
+import LandingPage from './components/LandingPage';
+
 
 type Algorithm = 'GA' | 'DE' | 'PSO' | 'GP' | 'ES';
 
 const App: React.FC = () => {
+    const [showLanding, setShowLanding] = useState(true);
     const [algo, setAlgo] = useState<Algorithm>('GA');
     const [config, setConfig] = useState<EAConfig>(DEFAULT_CONFIG);
 
@@ -98,24 +101,37 @@ const App: React.FC = () => {
         return () => clearInterval(interval);
     }, [running, gen, step, config.maxGenerations]);
 
+    if (showLanding) {
+        return <LandingPage onSelectAlgo={(a: string) => {
+            setAlgo(a as Algorithm);
+            setShowLanding(false);
+            window.scrollTo(0, 0);
+        }} />;
+    }
+
     return (
         <div className="min-h-screen bg-slate-900 text-slate-200 p-4 md:p-8 font-sans">
             <header className="mb-16 py-12 px-6 text-center relative overflow-hidden rounded-3xl border border-white/5 bg-slate-900/50">
                 {/* Layered Background Glows */}
+                {/* Add a back to landing page button and add back to home text*/}
+
+
                 <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse"></div>
                 <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-emerald-600/20 rounded-full blur-[120px] animate-pulse"></div>
 
                 <div className="relative z-10">
 
+
                     {/* Main Heading with Improved Gradient and Shadow */}
                     <h1 className="text-5xl md:text-7xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-white via-blue-400 to-emerald-400 drop-shadow-sm">
-                        Evolutionary <br className="hidden md:block" /> Algorithms Visualizer
+                        EvoViz <br className="hidden md:block" />
                     </h1>
 
                     {/* Subtext with balanced width */}
                     <p className="mt-6 mx-auto max-w-2xl text-slate-400 text-lg md:text-xl leading-relaxed font-light">
-                        Witness the power of <span className="text-blue-400 font-medium italic">natural selection</span> through interactive simulations.
-                        Bridge the gap between raw code and biological intelligence.
+                        Witness how the process <span className="text-blue-400 font-medium italic">natural selection</span> through interactive simulations
+                        <br />
+                        See how EA works isntead of blindly writing EAs
                     </p>
 
                     {/* Action Buttons / Status Pills */}
