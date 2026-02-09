@@ -16,11 +16,11 @@ const StepLogView: React.FC<Props> = ({ logs, algo }) => {
         Generation Step Details
       </h3>
       
-      {algo === 'GA' && <GALogTable logs={logs as GALogEntry[]} />}
-      {algo === 'DE' && <DELogTable logs={logs as DELogEntry[]} />}
-      {algo === 'PSO' && <PSOLogTable logs={logs as PSOLogEntry[]} />}
-      {algo === 'GP' && <GPLogTable logs={logs as GPLogEntry[]} />}
-      {algo === 'ES' && <ESLogTable logs={logs as ESLogEntry[]} />}
+      {algo === 'GA' && logs[0] && 'crossoverPoint' in logs[0] && <GALogTable logs={logs as GALogEntry[]} />}
+      {algo === 'DE' && logs[0] && 'targetId' in logs[0] && <DELogTable logs={logs as DELogEntry[]} />}
+      {algo === 'PSO' && logs[0] && 'inertiaTerm' in logs[0] && <PSOLogTable logs={logs as PSOLogEntry[]} />}
+      {algo === 'GP' && logs[0] && 'expressionBefore' in logs[0] && <GPLogTable logs={logs as GPLogEntry[]} />}
+      {algo === 'ES' && logs[0] && 'noiseVector' in logs[0] && <ESLogTable logs={logs as ESLogEntry[]} />}
     </div>
   );
 };
@@ -42,7 +42,9 @@ const GALogTable: React.FC<{logs: GALogEntry[]}> = ({ logs }) => (
             {logs.map((log, i) => (
                 <tr key={i} className="border-b border-slate-700/50 hover:bg-slate-700/30">
                     <td className="px-3 py-2 text-blue-400">#{log.id + 1}</td>
-                    <td className="px-3 py-2">P{log.parents[0]+1} + P{log.parents[1]+1}</td>
+                    <td className="px-3 py-2">
+                        {log.parents ? `P${log.parents[0]+1} + P${log.parents[1]+1}` : '-'}
+                    </td>
                     <td className="px-3 py-2 text-amber-500">{log.crossoverPoint}</td>
                     <td className="px-3 py-2 text-slate-500">[{log.preMutation.join('')}]</td>
                     <td className="px-3 py-2 text-red-400">{log.mutationIndex !== null ? log.mutationIndex : '-'}</td>
@@ -141,7 +143,9 @@ const GPLogTable: React.FC<{logs: GPLogEntry[]}> = ({ logs }) => (
             {logs.map((log, i) => (
                 <tr key={i} className="border-b border-slate-700/50 hover:bg-slate-700/30">
                     <td className="px-3 py-2 text-blue-400">#{log.id + 1}</td>
-                    <td className="px-3 py-2">P{log.parents[0]+1} + P{log.parents[1]+1}</td>
+                    <td className="px-3 py-2">
+                        {log.parents ? `P${log.parents[0]+1} + P${log.parents[1]+1}` : '-'}
+                    </td>
                     <td className="px-3 py-2 text-amber-500">{log.crossoverPoint}</td>
                     <td className="px-3 py-2 text-slate-500 truncate max-w-[150px]" title={log.expressionBefore}>{log.expressionBefore}</td>
                     <td className="px-3 py-2 text-red-400">{log.mutationIndex !== null ? log.mutationIndex : '-'}</td>

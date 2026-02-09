@@ -110,6 +110,17 @@ const VisualizerPage: React.FC = () => {
         return () => clearInterval(interval);
     }, [running, gen, step, config.maxGenerations]);
 
+    // Handle completion
+    useEffect(() => {
+        if (gen > 0 && gen >= config.maxGenerations) {
+            const timer = setTimeout(() => {
+                alert("Simulation Finished! Redirecting...");
+                navigate('/');
+            }, 100);
+            return () => clearTimeout(timer);
+        }
+    }, [gen, config.maxGenerations, navigate]);
+
     const handleAlgoChange = (newAlgo: Algorithm) => {
         navigate(`/visualizer/${newAlgo.toLowerCase()}`);
     };
