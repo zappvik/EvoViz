@@ -20,7 +20,7 @@ const ThreeDScatter: React.FC<Props> = ({ points, range, title }) => {
   const [pan, setPan] = useState({ x: 0, y: 0 });
   
   const isDragging = useRef(false);
-  const dragType = useRef<'rotate' | 'pan' | null>(null);
+  const dragType = useRef<'rotate' | 'pan' | 'pan-zoom' | null>(null);
   const lastMouse = useRef({ x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -171,6 +171,86 @@ const ThreeDScatter: React.FC<Props> = ({ points, range, title }) => {
       e.preventDefault();
   };
 
+  // Touch Handling
+  const lastTouchRef = useRef<{ x: number, y: number } | null>(null);
+  const initialPinchDistanceRef = useRef<number | null>(null);
+  const lastPinchCenterRef = useRef<{ x: number, y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+      // Prevent default to avoid some browser weirdness, though touch-none handles most
+      // e.preventDefault(); 
+      
+      if (e.touches.length === 1) {
+          dragType.current = 'rotate';
+          lastTouchRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      } else if (e.touches.length === 2) {
+          dragType.current = 'pan-zoom';
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          
+          const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          initialPinchDistanceRef.current = dist;
+          
+          lastPinchCenterRef.current = {
+              x: (t1.clientX + t2.clientX) / 2,
+              y: (t1.clientY + t2.clientY) / 2
+          };
+      }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+      // Stop propagation to prevent page scrolling if touch-none isn't enough (it usually is)
+      // e.stopPropagation(); 
+      
+      if (dragType.current === 'rotate' && e.touches.length === 1 && lastTouchRef.current) {
+          const t = e.touches[0];
+          const dx = t.clientX - lastTouchRef.current.x;
+          const dy = t.clientY - lastTouchRef.current.y;
+          
+          setRotation(prev => ({
+              x: prev.x + dy * 0.01,
+              y: prev.y + dx * 0.01
+          }));
+          
+          lastTouchRef.current = { x: t.clientX, y: t.clientY };
+          
+      } else if (dragType.current === 'pan-zoom' && e.touches.length === 2 && initialPinchDistanceRef.current && lastPinchCenterRef.current) {
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          
+          // 1. Zoom (Pinch)
+          const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          const distDelta = dist - initialPinchDistanceRef.current;
+          
+          // Sensitivity for zoom
+          const zoomFactor = 0.005;
+          setZoom(prev => Math.max(0.1, Math.min(10, prev + distDelta * zoomFactor)));
+          
+          initialPinchDistanceRef.current = dist; // Reset for incremental change
+
+          // 2. Pan (Two-finger drag)
+          const cx = (t1.clientX + t2.clientX) / 2;
+          const cy = (t1.clientY + t2.clientY) / 2;
+          
+          const dx = cx - lastPinchCenterRef.current.x;
+          const dy = cy - lastPinchCenterRef.current.y;
+          
+          setPan(prev => ({
+              x: prev.x + dx,
+              y: prev.y + dy
+          }));
+          
+          lastPinchCenterRef.current = { x: cx, y: cy };
+      }
+  };
+
+  const handleTouchEnd = () => {
+      dragType.current = null;
+      lastTouchRef.current = null;
+      initialPinchDistanceRef.current = null;
+      lastPinchCenterRef.current = null;
+  };
+
   return (
     <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 h-full flex flex-col overflow-hidden">
       <h3 className="text-xs uppercase text-slate-400 mb-2 select-none flex justify-between">
@@ -184,6 +264,10 @@ const ThreeDScatter: React.FC<Props> = ({ points, range, title }) => {
            onMouseUp={handleMouseUp}
            onMouseLeave={handleMouseUp}
            onContextMenu={handleContextMenu}
+           onTouchStart={handleTouchStart}
+           onTouchMove={handleTouchMove}
+           onTouchEnd={handleTouchEnd}
+           onTouchCancel={handleTouchEnd}
       >
         <canvas ref={canvasRef} className="w-full h-full block" />
       </div>

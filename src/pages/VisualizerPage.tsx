@@ -114,12 +114,13 @@ const VisualizerPage: React.FC = () => {
     useEffect(() => {
         if (gen > 0 && gen >= config.maxGenerations) {
             const timer = setTimeout(() => {
-                alert("Simulation Finished! Redirecting...");
-                navigate('/');
+                alert("Simulation Finished!");
+                reset();
+                navigate(`/visualizer/${algo.toLowerCase()}`, { replace: true });
             }, 100);
             return () => clearTimeout(timer);
         }
-    }, [gen, config.maxGenerations, navigate]);
+    }, [gen, config.maxGenerations, algo, navigate, reset]);
 
     const handleAlgoChange = (newAlgo: Algorithm) => {
         navigate(`/visualizer/${newAlgo.toLowerCase()}`);
