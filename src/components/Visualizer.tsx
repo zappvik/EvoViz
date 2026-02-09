@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ScatterChart, Scatter, Cell } from 'recharts';
 import { Individual, EAConfig } from '../utils/common';
 import { evaluateGP } from '../utils/functions';
+import ThreeDScatter from './ThreeDScatter';
 
 interface HistoryPoint {
   generation: number;
@@ -45,8 +46,10 @@ const Visualizer: React.FC<Props> = ({ history, currentPop, algo, config }) => {
       return data;
   }, [currentPop, isGPSine, config]);
 
+  const isSphere = !isKnapsack && !isGPSine;
+
   return (
-    <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 w-full lg:h-64">
+    <div className={`flex flex-col lg:grid ${isSphere ? 'xl:grid-cols-3 lg:grid-cols-2' : 'lg:grid-cols-2'} gap-4 w-full lg:h-64`}>
       {/* Fitness History */}
       <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 h-64 lg:h-full">
         <h3 className="text-xs uppercase text-slate-400 mb-2">
@@ -66,7 +69,7 @@ const Visualizer: React.FC<Props> = ({ history, currentPop, algo, config }) => {
         </div>
       </div>
 
-      {/* Right Chart: 2D Projection OR Function Fit */}
+      {/* Middle/Right Chart: 2D Projection OR Function Fit */}
       <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 h-64 lg:h-full">
         <h3 className="text-xs uppercase text-slate-400 mb-2">
             {isGPSine ? 'Function Fit (Target vs Best)' : '2D Projection (Gene 0 vs Gene 1)'}
@@ -106,6 +109,17 @@ const Visualizer: React.FC<Props> = ({ history, currentPop, algo, config }) => {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* 3D Scatter (Only for Sphere) */}
+      {isSphere && (
+          <div className="h-64 lg:h-full">
+              <ThreeDScatter 
+                points={scatterData.map(d => ({ x: d.x, y: d.y, z: d.z, color: '#f472b6' }))} 
+                range={5} 
+                title="3D Sphere Landscape (Drag to Rotate)"
+              />
+          </div>
+      )}
     </div>
   );
 };
