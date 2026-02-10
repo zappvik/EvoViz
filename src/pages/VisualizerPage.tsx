@@ -36,6 +36,7 @@ const VisualizerPage: React.FC = () => {
     const [history, setHistory] = useState<{ generation: number, bestFitness: number, avgFitness: number }[]>([]);
     const [running, setRunning] = useState(false);
     const [stepLogs, setStepLogs] = useState<StepLog>([]);
+    const [isMaximized, setIsMaximized] = useState(false);
 
     // Initialize function
     const reset = useCallback(() => {
@@ -250,15 +251,26 @@ const VisualizerPage: React.FC = () => {
 
                 {/* Right Column: Visualization & Data */}
                 <div className="xl:col-span-3 space-y-6">
-                    <Visualizer history={history} currentPop={pop} algo={algo} config={config} />
-                    <PopulationTable
-                        population={pop}
-                        algo={algo}
-                        knapsackItems={config.knapsackItems}
-                        knapsackCapacity={config.knapsackCapacity}
-                        config={config}
+                    <Visualizer 
+                        history={history} 
+                        currentPop={pop} 
+                        algo={algo} 
+                        config={config} 
+                        isMaximized={isMaximized}
+                        onToggleMaximize={() => setIsMaximized(!isMaximized)}
                     />
-                    <StepLogView logs={stepLogs} algo={algo} />
+                    {!isMaximized && (
+                        <>
+                            <PopulationTable
+                                population={pop}
+                                algo={algo}
+                                knapsackItems={config.knapsackItems}
+                                knapsackCapacity={config.knapsackCapacity}
+                                config={config}
+                            />
+                            <StepLogView logs={stepLogs} algo={algo} />
+                        </>
+                    )}
                 </div>
             </div>
         </div>
