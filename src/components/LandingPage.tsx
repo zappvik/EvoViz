@@ -2,6 +2,7 @@ import { ArrowDown, Cpu, GitBranch, Globe, Zap, Activity, Dna, Search, Network, 
 import BackgroundEffect from './BackgroundEffect';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/Evo-Viz-Logo.png';
 
 const LandingPage: React.FC = () => {
   const scrollToSection = (id: string) => {
@@ -26,9 +27,7 @@ const LandingPage: React.FC = () => {
              <span>Interactive Evolution Engine</span>
            </div>
 
-           <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-200 to-slate-600 mb-6 drop-shadow-2xl">
-             Evo<span className="text-blue-500">Viz</span>
-           </h1>
+           <img src={logo} alt="EvoViz" className="h-24 md:h-36 mx-auto mb-6 drop-shadow-2xl" />
            
            <p className="text-xl md:text-3xl text-slate-400 max-w-3xl mx-auto leading-relaxed font-light">
              Explore how Evolutionary Algorithms <span className="text-slate-100 font-medium border-b border-blue-500/40">evolve</span> and <span className="text-slate-100 font-medium border-b border-emerald-500/40">compute</span> by seeing actually stuff.
@@ -142,7 +141,7 @@ const LandingPage: React.FC = () => {
            </div>
            
            <footer className="mt-32 text-slate-600 text-sm font-medium border-t border-slate-800/50 pt-8">
-             <p>EvoViz under EvOLve TAG and Core Lab</p>
+             <p><img src={logo} alt="EvoViz" className="h-4 inline mr-1" /> under EvOLve TAG and Core Lab</p>
            </footer>
         </div>
       </section>

@@ -12,6 +12,7 @@ import Visualizer from '../components/Visualizer';
 import ConfigPanel from '../components/ConfigPanel';
 import StepLogView from '../components/StepLogView';
 import { ArrowLeft } from 'lucide-react';
+import logo from '../assets/Evo-Viz-Logo.png';
 
 type Algorithm = 'GA' | 'DE' | 'PSO' | 'GP' | 'ES';
 
@@ -140,9 +141,7 @@ const VisualizerPage: React.FC = () => {
                         <ArrowLeft className="w-5 h-5 text-slate-400 group-hover:text-white" />
                     </Link>
                     <div>
-                        <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-white">
-                            Evo<span className="text-blue-500">Viz</span>
-                        </h1>
+                        <img src={logo} alt="EvoViz" className="h-8 md:h-12 mb-1" />
                         <p className="text-slate-500 text-sm">Algorithm Visualization Engine</p>
                     </div>
                  </div>
