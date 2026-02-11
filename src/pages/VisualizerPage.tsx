@@ -151,7 +151,7 @@ const VisualizerPage: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-200 p-4 md:p-8 font-sans">
-            <header className="mb-8 py-1.5 px-4 relative overflow-visible rounded-3xl border border-white/5 bg-slate-900/50 flex flex-col md:flex-row items-center justify-between gap-2">
+            <header className="mb-8 py-0.5 px-4 relative overflow-visible rounded-3xl border border-white/5 bg-slate-900/50 flex flex-col md:flex-row items-center justify-between gap-2">
                  <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none rounded-3xl">
                     <div className="absolute -top-24 -left-24 w-64 h-64 bg-blue-600/10 rounded-full blur-[80px]"></div>
                     <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-emerald-600/10 rounded-full blur-[80px]"></div>
@@ -166,8 +166,10 @@ const VisualizerPage: React.FC = () => {
                  </div>
 
                  {/* Center: Logo Only */}
-                 <div className="relative z-10 flex-1 flex items-center justify-center order-2 md:order-none">
-                    <img src={logo} alt="EvoViz" className="h-16 md:h-24" />
+                 <div className="relative z-10 flex-1 flex items-center justify-center order-2 md:order-none -my-1">
+                    <Link to="/" className="cursor-pointer hover:opacity-80 transition-opacity block">
+                        <img src={logo} alt="EvoViz" className="h-20 md:h-28 block" />
+                    </Link>
                  </div>
 
                  {/* Right: Navigation Tabs */}
