@@ -123,8 +123,8 @@ const LandingPage: React.FC = () => {
               icon={<Globe />}
               color="emerald"
             />
-            <div className="col-span-full lg:col-span-3 flex justify-center gap-8">
-              <div className="w-full" >
+            <div className="col-span-full lg:col-span-3 flex flex-col lg:flex-row justify-center gap-8">
+              <div className="w-full lg:w-1/2" >
                 <AlgoCard
                   id="GP"
                   title="Genetic Programming"
@@ -133,7 +133,7 @@ const LandingPage: React.FC = () => {
                   color="purple"
                 />
               </div>
-              <div className="w-full" >
+              <div className="w-full lg:w-1/2" >
                 <AlgoCard
                   id="ES"
                   title="Evolution Strategies"
